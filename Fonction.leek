@@ -1,0 +1,78 @@
+/**
+* return the value of the distance between your leek and the nearest leek
+**/
+function getEnemyDistance(){
+    var cell_ennemy = getNearestEnemy();
+    var cell_my_leek = getCell();
+    var distance = getDistance(cell_ennemy, cell_my_leek);
+    return distance;
+}
+
+function initWeapon(weapon_to_equip){
+    if(getWeapon()!= weapon_to_equip){
+        setWeapon(weapon_to_equip);
+    }
+    return weapon_to_equip;
+}
+
+/**
+* Return the value of the weapon range given in parameter
+**/
+function getWeaponRangeMax(weapon){
+    var weapon_range = 0;
+    if(weapon == WEAPON_PISTOL){weapon_range = 7;}
+    if(weapon == WEAPON_MACHINE_GUN){weapon_range = 6;}
+    if(weapon == WEAPON_DOUBLE_GUN){weapon_range = 7;}
+    if(weapon == WEAPON_SHOTGUN){weapon_range = 5;}
+    if(weapon == WEAPON_MAGNUM){weapon_range = 8;}
+    if(weapon == WEAPON_LASER){weapon_range = 7;}
+    if(weapon == WEAPON_GRENADE_LAUNCHER){weapon_range = 7;}
+    if(weapon == WEAPON_FLAME_THROWER){weapon_range = 7;}
+    if(weapon == WEAPON_DESTROYER){weapon_range = 6;}
+    if(weapon == WEAPON_GAZOR){weapon_range = 7;}
+    if(weapon == WEAPON_B_LASER){weapon_range = 8;}
+    if(weapon == WEAPON_ELECTRISOR){weapon_range = 7;}
+    if(weapon == WEAPON_M_LASER){weapon_range = 15;}
+    return weapon_range;
+}
+
+/**
+* Return the value of the weapon mininmum range given in parameter
+**/
+function getWeaponRangeMin(weapon){
+    var weapon_range = 0;
+    if(weapon == WEAPON_PISTOL){weapon_range = 1;}
+    if(weapon == WEAPON_MACHINE_GUN){weapon_range = 1;}
+    if(weapon == WEAPON_DOUBLE_GUN){weapon_range = 2;}
+    if(weapon == WEAPON_SHOTGUN){weapon_range = 1;}
+    if(weapon == WEAPON_MAGNUM){weapon_range = 1;}
+    if(weapon == WEAPON_LASER){weapon_range = 2;}
+    if(weapon == WEAPON_GRENADE_LAUNCHER){weapon_range = 4;}
+    if(weapon == WEAPON_FLAME_THROWER){weapon_range = 2;}
+    if(weapon == WEAPON_DESTROYER){weapon_range = 1;}
+    if(weapon == WEAPON_GAZOR){weapon_range = 2;}
+    if(weapon == WEAPON_B_LASER){weapon_range = 2;}
+    if(weapon == WEAPON_ELECTRISOR){weapon_range = 7;}
+    if(weapon == WEAPON_M_LASER){weapon_range = 2;}
+    return weapon_range;
+}
+
+/**
+* Return the value of the chips range given in parameter
+**/
+function getChipRange(chip){
+    var chip_range = 0;
+    if(chip == CHIP_SHOCK){chip_range = 6;}
+    if(chip == CHIP_PEBBLE){chip_range = 5;}
+    if(chip == CHIP_SPARK){chip_range = 10;}
+    if(chip == CHIP_ICE){chip_range = 8;}
+    if(chip == CHIP_ROCK){chip_range = 6;}
+    if(chip == CHIP_FLASH){chip_range = 7;}
+    if(chip == CHIP_FLAME){chip_range = 7;}
+    if(chip == CHIP_STALACTITE){chip_range = 7;}
+    if(chip == CHIP_LIGHTNING){chip_range = 5;}
+    if(chip == CHIP_ROCKFALL){chip_range = 7;}
+    if(chip == CHIP_ICEBERG){chip_range = 5;}
+    if(chip == CHIP_METEORITE){chip_range = 8;}
+    return chip_range;
+}

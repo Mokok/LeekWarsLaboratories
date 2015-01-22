@@ -1,0 +1,70 @@
+include("Fonctions");
+
+global enemy_to_assault;
+global my_tp;
+global my_weapon;
+global current_assault_chip;
+
+function init_local_global_var_weapon(){
+    enemy_to_assault = getNearestEnemy();
+    my_weapon = getWeapon();
+    if(my_weapon==null){
+        my_weapon = initWeapon(WEAPON_MAGNUM);
+    }
+    my_tp = getTP();
+    current_assault_chip = CHIP_SPARK;
+}
+
+function fire_weapon(){
+    var result_assault;
+    do {
+        result_assault=useWeapon(enemy_to_assault);
+    }while (result_assault == USE_SUCCESS);
+}
+
+function fire_chip(){
+    var result;
+    do {
+        result=useChip(current_assault_chip, enemy_to_assault);
+    }while (result == USE_SUCCESS);
+}
+
+function taunt(){
+    if(getLife(enemy_to_assault) < 40 && getLife() > 40){
+        say("Tu ne le sais pas encore mais tu vas finir dans le grand pot au feu !");
+        say("ATATATTATATATATTATATATATATATATATTATA");
+        say("ATOUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+    }
+}
+
+function better_attaque_option(){
+    taunt();
+    if(canUseWeapon(WEAPON_LASER, enemy_to_assault)){
+        initWeapon(WEAPON_LASER);
+    }
+    else if(canUseWeapon(WEAPON_MAGNUM, enemy_to_assault)){
+        initWeapon(WEAPON_MAGNUM);
+    }
+   
+    var can_weapon = canUseWeapon(enemy_to_assault);
+    var can_chip = canUseChip(current_assault_chip, enemy_to_assault);
+   
+    if(can_weapon){
+        if(can_chip){
+            fire_weapon();
+        }
+    }
+    else if(can_chip){
+        if(!can_weapon){
+            fire_chip();
+        }
+    }
+    else if(can_weapon){
+        fire_weapon();
+    }
+}
+
+function handle_attaque(){
+    init_local_global_var_weapon();
+    better_attaque_option();
+}

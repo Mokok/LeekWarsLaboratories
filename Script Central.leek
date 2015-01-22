@@ -1,0 +1,28 @@
+include("Script Deplacement");
+include("Script Attaque");
+include("Script Support");
+
+//En cours, on remarquera la superbe duplication de code qui attend ^^
+if (getFightType()==FIGHT_TYPE_SOLO) {
+	handle_buff();
+	handle_move_preattaque();
+	handle_attaque();
+	handle_move_postattaque();	
+}else if (getFightType()==FIGHT_TYPE_FARMER) {
+	if(getName()=="SpaceBifle"){
+		handle_buff();
+		handle_move_preattaque();
+		handle_attaque();
+		handle_move_postattaque();
+	}else if(getName()=="BananaBifle"){
+		handle_buff();
+		handle_move_preattaque();
+		handle_attaque();
+		handle_move_postattaque();	
+	}
+}else if (getFightType()==FIGHT_TYPE_TEAM) {
+	handle_buff();
+	handle_move_preattaque();
+	handle_attaque();
+	handle_move_postattaque();	
+}

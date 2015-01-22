@@ -1,0 +1,25 @@
+global my_pv_support;
+global turn;
+
+function init_support(){
+    my_pv_support = getLife();
+    turn = getTurn();
+}
+
+//Dépend de vos chips, 
+//a voir s'il faudrait pas faire une focntion pour savoir quelles chips le poireau a et faire un classement d'importance
+function handle_buff(){
+    init_support();
+    if(turn > 2){
+        var    result = useChip(CHIP_HELMET, getLeek());
+        if(result != USE_SUCCESS){
+            result = useChip(CHIP_STEROID, getLeek());
+        }
+        if(result != USE_SUCCESS){
+            result = useChip(CHIP_PROTEIN, getLeek());   
+        }
+        /*if(my_pv_support < 150){
+            result = useChip(CHIP_CURE, getLeek());
+        }*/
+    }
+}
