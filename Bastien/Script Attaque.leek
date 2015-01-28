@@ -17,7 +17,7 @@ function init_local_global_var_weapon(){
 
 function fire_weapon(){
     var result_assault;
-    do {
+    do{
         result_assault=useWeapon(enemy_to_assault);
     }while (result_assault == USE_SUCCESS);
 }
