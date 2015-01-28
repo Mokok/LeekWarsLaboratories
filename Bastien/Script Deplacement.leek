@@ -34,14 +34,14 @@ function se_mettre_a_porte(nb_case){
     var used_tp = 0;
     var stop_moving = canUseWeapon(my_weapon_move, enemy_nearest);
     if(!stop_moving){
-        do{
+        while(!stop_moving){
             moveToward(enemy_nearest, 1);
             used_tp++;
             stop_moving = canUseWeapon(my_weapon_move, enemy_nearest);
             if(used_tp == nb_case){
                 stop_moving = true;
             }
-        }while(!stop_moving);
+        }
     }
 }
 
