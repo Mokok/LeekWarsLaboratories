@@ -1,4 +1,4 @@
-include("Fonctions");
+include("Functions");
 
 global enemy_to_assault;
 global my_tp;

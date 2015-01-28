@@ -1,4 +1,4 @@
-include("Fonctions");
+include("Functions");
 
 global my_leek;
 global my_cell;
