@@ -1,25 +1,42 @@
 global my_pv_support;
 global turn;
+global chips;
+global myleek;
 
 function init_support(){
     my_pv_support = getLife();
     turn = getTurn();
+	chips = getChips();
+	myleek = getLeek();
 }
 
-//Dépend de vos chips, 
-//a voir s'il faudrait pas faire une focntion pour savoir quelles chips le poireau a et faire un classement d'importance
 function handle_buff(){
     init_support();
+	var result;
+	
     if(turn > 2){
-        var    result = useChip(CHIP_HELMET, getLeek());
-        if(result != USE_SUCCESS){
-            result = useChip(CHIP_STEROID, getLeek());
+		/*if (my_pv_support<300 and canUseChip(CHIP_CURE, myleek)){
+			useChip(CHIP_CURE, myleek);
+			my_pv_support = getLife();
+		}*/
+		/*if (my_pv_support<400 and canUseChip(CHIP_BANDAGE, myleek)){
+			useChip(CHIP_BANDAGE, myleek);
+			my_pv_support = getLife();
+		}*/
+		if (turn%3==0) {
+			//useChip(CHIP_STRETCHING, myleek);
+			//useChip(CHIP_SHIELD, myleek);
+			useChip(CHIP_PROTEIN, myleek);			
+		}
+		if (turn%4==0) {
+			useChip(CHIP_HELMET, myleek);
+			useChip(CHIP_STEROID, myleek);
+			//useChip(CHIP_WARM_UP, myleek);
         }
-        if(result != USE_SUCCESS){
-            result = useChip(CHIP_PROTEIN, getLeek());   
-        }
-        /*if(my_pv_support < 150){
-            result = useChip(CHIP_CURE, getLeek());
-        }*/
     }
+}
+
+function handle_buff_allies(){
+	init_support();
+	
 }
