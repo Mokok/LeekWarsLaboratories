@@ -2,7 +2,6 @@ include("Script Deplacement");
 include("Script Attaque");
 include("Script Support");
 
-//En cours, on remarquera la superbe duplication de code qui attend ^^
 if (getFightType()==FIGHT_TYPE_SOLO) {
 	handle_buff();
 	handle_move_preattaque();
