@@ -76,7 +76,3 @@ function getChipRange(chip){
     if(chip == CHIP_METEORITE){chip_range = 8;}
     return chip_range;
 }
-
-function isFightEquipe(){
-    return (!getFightType() == FIGHT_TYPE_SOLO);
-}
