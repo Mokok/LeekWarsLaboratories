@@ -1,0 +1,56 @@
+//--------------------------------
+//------- Code de base -----------
+//--------------------------------
+include("MesFonctions");
+// On récupère l'ennemi le plus proche
+var enemy = getNearestEnemy();
+var distance=getDistance(getCell(), getCell(enemy));
+var ratioLife = getLife()/getTotalLife();
+if(getTurn()==1){	
+	setWeapon(WEAPON_GRENADE_LAUNCHER);	
+}
+
+if (canUseChip(CHIP_STEROID,getLeek())){
+	useChip(CHIP_STEROID,getLeek());
+}
+if(ratioLife<0.5 && canUseChip(CHIP_CURE, getLeek())){
+	useChip(CHIP_CURE, getLeek());
+}
+if (canUseChip(CHIP_ARMOR, getLeek())){
+	useChip(CHIP_ARMOR, getLeek());
+}
+if (canUseChip(CHIP_MOTIVATION,getLeek()) and getTP()>=8){
+	useChip(CHIP_MOTIVATION,getLeek());
+}
+
+move(enemy,7);
+var cellCible = getCellToUseGrenade(enemy);
+if(cellCible!=null ){
+	if(canUseWeaponMax(WEAPON_GRENADE_LAUNCHER,cellCible)){
+		setWeaponMax(WEAPON_GRENADE_LAUNCHER);
+		useWeaponOnCellMax(cellCible);
+	}
+}
+else{
+	if(canUseWeapon(WEAPON_MAGNUM, enemy)){
+		setWeaponMax(WEAPON_MAGNUM);
+		useWeaponMax(enemy);
+	}
+	else{
+		if(canUseChip(CHIP_STALACTITE, enemy)){
+			useChipMax(CHIP_STALACTITE,enemy);
+		}
+	}
+}
+//Si on ne peut pas tirer on essaye de lancer un sort
+if(distance>=7 and distance <=10){
+	useChipMax(CHIP_SPARK,getAliveEnemies());
+}
+// On essaye de lui tirer dessus !
+if(getTP()>=2){
+	useChipMax(CHIP_SHOCK, getAliveEnemies());
+}	
+move(enemy,9);
+
+
+
