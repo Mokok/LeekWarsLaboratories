@@ -18,6 +18,16 @@ function useWeaponMax(enemies){
 	
 }
 
+function useWeaponOnCellMax(cell){
+	//On utilise tous nos tp sur l'ennemi le plus faible
+	var TP=getTP();
+	var cost=getWeaponCost(getWeapon());
+	for (var i=0;i<TP/cost;i++){
+		useWeaponOnCell(cell);
+	}
+	
+}
+
 /**
 * Utilise une chip jusqu'à epuisement des PT
 **/
@@ -92,13 +102,23 @@ function heal(chip,leek){
 function moveInMiddleOfAllies(allies){
 	var resultX=0;
 	var resultY=0;
+	var dividende =0;
 	var alliesCount=getAlliesCount();
 	for (var i=0;i<alliesCount;i++){
-		resultX = resultX + getCellX(getCell(allies[i]));
-		resultY = resultY + getCellY(getCell(allies[i]));
+		if(i!=getLeek()){
+			resultX = resultX + getCellX(getCell(allies[i]));
+			resultY = resultY + getCellY(getCell(allies[i]));
+			dividende++;
+			if(i==getStrongestAlly or i==getLowestLifeAlly){
+				resultX = resultX + getCellX(getCell(allies[i]));
+				resultY = resultY + getCellY(getCell(allies[i]));
+				dividende++;
+			}
+		}
+		
 	}
-	resultX = floor(resultX/alliesCount);
-	resultY = floor(resultY/alliesCount);
+	resultX = floor(resultX/dividende);
+	resultY = floor(resultY/dividende);
 
 	var cellResult=getCellFromXY(resultX, resultY);
 	moveTowardCell(getCaseNonObstacle(cellResult));
@@ -137,4 +157,69 @@ function getCaseNonObstacle(cell){
 	pas++;
 	}
 	return result;	
+}
+
+//move jusqu'a que la ditance entre leek et le poireau soit de distanceCible
+function move(leek,distanceCible){
+	var i=0;
+	var currentDistance= getDistance(getCell(leek), getCell(getLeek()));
+	if(currentDistance<=distanceCible){
+		while (currentDistance<distanceCible and i<=getMP()){
+			moveAwayFrom(leek, 1);
+			currentDistance= getDistance(getCell(leek), getCell(getLeek()));
+			i++;
+		}
+	}
+	else{
+		while (currentDistance>distanceCible and i<=getMP()){
+			moveToward(leek, 1);
+			currentDistance= getDistance(getCell(leek), getCell(getLeek()));
+			i++;
+		}
+	}
+}
+
+function getCellToUseGrenade(enemy){
+	var array = getCellsWhereLauncherHit(enemy);
+	for (var i=0;i<count(array);i++){
+		if(canUseWeaponOnCell(WEAPON_GRENADE_LAUNCHER, array[i])){
+			return array[i];
+		}
+	}
+	return null;
+}
+//renvoie un tableau de cellules sur lesquelles l'ennemi 
+//est touche si on tire avec le lance grenades
+function getCellsWhereLauncherHit(enemy){
+		var cellCible = getCell(enemy);
+		var x=getCellX(cellCible);
+		var y=getCellY(cellCible);
+		var result=[];
+		result[0]=cellCible;
+		result[1]=getCellFromXY(x-1, y-1);
+		result[2]=getCellFromXY(x-1, y);
+		result[3]=getCellFromXY(x-1, y+1);
+		result[4]=getCellFromXY(x, y+1);
+		result[5]=getCellFromXY(x, y-1);
+		result[6]=getCellFromXY(x+1, y-1);
+		result[7]=getCellFromXY(x+1, y);
+		result[8]=getCellFromXY(x+1, y+1);
+		result[9]=getCellFromXY(x+2, y);
+		result[10]=getCellFromXY(x-2, y);
+		result[11]=getCellFromXY(x, y+2);
+		result[12]=getCellFromXY(x, y-2);
+		return result;	
+}
+//Retourne true si l'on peut utiliser l'arme meme apres en avoir change
+function canUseWeaponMax(weapon,cell){
+	if(getWeapon()!=weapon){
+		if(getTP()>getWeaponCost(weapon)){
+			return canUseWeaponOnCell(weapon, cell);
+		}
+	}
+	else{
+		return (canUseWeaponOnCell(weapon, cell) 
+		and getTP()>=getWeaponCost(weapon));
+	}
+	
 }
