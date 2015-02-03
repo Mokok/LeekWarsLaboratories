@@ -2,20 +2,25 @@
 * Utilise une arme jusqu'à epuisement des PT
 **/
 function useWeaponMax(enemies){
-	var enemy=enemies[0];
-	//On recupere l'enemi le plus faible
-	for (var temp in enemies){
-		if(canUseWeapon(temp) and getLife(temp)<getLife(enemy)){
-			enemy=temp;
+	var enemy;
+	if(typeOf(enemies)==TYPE_ARRAY){
+		enemy=enemies[0];
+		//On recupere l'enemi le plus faible
+		for (var temp in enemies){
+			if(canUseWeapon(temp) and getLife(temp)<getLife(enemy)){
+				enemy=temp;
+			}
 		}
 	}
-	//On utilise tous nos tp sur l'ennemi le plus faible
-	var TP=getTP();
-	var cost=getWeaponCost(getWeapon());
-	for (var i=0;i<TP/cost;i++){
-		useWeapon(enemy);
+	else{
+		enemy=enemies;
 	}
-	
+		//On utilise tous nos tp sur l'ennemi le plus faible
+		var TP=getTP();
+		var cost=getWeaponCost(getWeapon());
+		for (var i=0;i<TP/cost;i++){
+			useWeapon(enemy);
+		}	
 }
 
 function useWeaponOnCellMax(cell){
@@ -32,20 +37,25 @@ function useWeaponOnCellMax(cell){
 * Utilise une chip jusqu'à epuisement des PT
 **/
 function useChipMax(chip,enemies){
-	var enemy=enemies[0];
-	//On recupere l'enemi le plus faible
-	for (var temp in enemies){
-		if(canUseWeapon(temp) and getLife(temp)<getLife(enemy)){
-			enemy=temp;
+	var enemy;
+	if(typeOf(enemies)==TYPE_ARRAY){
+		enemy=enemies[0];
+		//On recupere l'enemi le plus faible
+		for (var temp in enemies){
+			if(canUseWeapon(temp) and getLife(temp)<getLife(enemy)){
+				enemy=temp;
+			}
 		}
 	}
-	//On utilise tous nos tp sur l'enmi le plus faible
-	var TP=getTP();
-	var cost=getChipCost(chip);
-	for (var i=0;i<TP/cost;i++){
-		useChip(chip, enemy);
+	else{
+		enemy=enemies;
 	}
-	
+		//On utilise tous nos tp sur l'enmi le plus faible
+		var TP=getTP();
+		var cost=getChipCost(chip);
+		for (var i=0;i<TP/cost;i++){
+			useChip(chip, enemy);
+		}	
 }
 /**
 * renvoie l'allie à qui il manque le plus de points de vie
@@ -105,75 +115,42 @@ function moveInMiddleOfAllies(allies){
 	var dividende =0;
 	var alliesCount=getAlliesCount();
 	for (var i=0;i<alliesCount;i++){
-		if(i!=getLeek()){
-			resultX = resultX + getCellX(getCell(allies[i]));
-			resultY = resultY + getCellY(getCell(allies[i]));
-			dividende++;
-			if(i==getStrongestAlly or i==getLowestLifeAlly){
+		if(isAlive(allies[i])){
+			if(allies[i]!=getLeek() and getName(allies[i])!='Seiko'){
+
 				resultX = resultX + getCellX(getCell(allies[i]));
 				resultY = resultY + getCellY(getCell(allies[i]));
 				dividende++;
+				if(allies[i]==getStrongestAlly(allies) or allies[i]==getLowestLifeAlly(allies)){
+					resultX = resultX + getCellX(getCell(allies[i]));
+					resultY = resultY + getCellY(getCell(allies[i]));
+					dividende++;
+				}
 			}
 		}
-		
 	}
 	resultX = floor(resultX/dividende);
 	resultY = floor(resultY/dividende);
-
 	var cellResult=getCellFromXY(resultX, resultY);
-	moveTowardCell(getCaseNonObstacle(cellResult));
+	moveTowardCell(cellResult);
 }
-//Renvoie la case vide la plus proche de cell
-function getCaseNonObstacle(cell){
-	var result=cell;
-	var pas=1;
-	var x=getCellX(cell);
-	var y=getCellY(cell);
-	while(!isEmptyCell(result)){
-		if(isEmptyCell(getCellFromXY(x+pas, y+pas))){
-			result = getCellFromXY(x+pas, y+pas);
-		}
-		if(isEmptyCell(getCellFromXY(x+pas, y))){
-			result = getCellFromXY(x+pas, y);
-		}
-		if(isEmptyCell(getCellFromXY(x+pas, y-pas))){
-			result = getCellFromXY(x+pas, y-pas);
-		}
-		if(isEmptyCell(getCellFromXY(x, y+pas))){
-			result = getCellFromXY(x, y+pas);
-		}
-		if(isEmptyCell(getCellFromXY(x, y-pas))){
-			result = getCellFromXY(x, y-pas);
-		}
-		if(isEmptyCell(getCellFromXY(x-pas, y+pas))){
-			result = getCellFromXY(x-pas, y+pas);
-		}
-		if(isEmptyCell(getCellFromXY(x-pas, y))){
-			result = getCellFromXY(x-pas, y);
-		}
-		if(isEmptyCell(getCellFromXY(x-pas, y-pas))){
-			result = getCellFromXY(x-pas, y-pas);
-		}
-	pas++;
-	}
-	return result;	
-}
+
 
 //move jusqu'a que la ditance entre leek et le poireau soit de distanceCible
 function move(leek,distanceCible){
 	var i=0;
-	var currentDistance= getDistance(getCell(leek), getCell(getLeek()));
+	var currentDistance= getPathLength(getCell(leek), getCell(getLeek()));
 	if(currentDistance<=distanceCible){
-		while (currentDistance<distanceCible and i<=getMP()){
+		while (currentDistance<distanceCible and i<=getMP()+1){
 			moveAwayFrom(leek, 1);
-			currentDistance= getDistance(getCell(leek), getCell(getLeek()));
+			currentDistance= getPathLength(getCell(leek), getCell(getLeek()));
 			i++;
 		}
 	}
 	else{
-		while (currentDistance>distanceCible and i<=getMP()){
+		while (currentDistance>distanceCible and i<=getMP()+1){
 			moveToward(leek, 1);
-			currentDistance= getDistance(getCell(leek), getCell(getLeek()));
+			currentDistance= getPathLength(getCell(leek), getCell(getLeek()));
 			i++;
 		}
 	}
@@ -222,4 +199,24 @@ function canUseWeaponMax(weapon,cell){
 		and getTP()>=getWeaponCost(weapon));
 	}
 	
+}
+
+
+function attaquer(){
+	if(canUseChip(CHIP_STALACTITE, getNearestEnemy())){
+	useChip(CHIP_STALACTITE,getNearestEnemy());
+}
+var cellCible = getCellToUseGrenade(getNearestEnemy());
+if(cellCible!=null and getDistance(getCell(), getCell(getNearestEnemy()))!=1){
+	if(canUseWeaponMax(WEAPON_GRENADE_LAUNCHER,cellCible)){
+		setWeaponMax(WEAPON_GRENADE_LAUNCHER);
+		useWeaponOnCellMax(cellCible);
+	}
+}
+else{
+	if(canUseWeapon(WEAPON_MAGNUM, getNearestEnemy())){
+		setWeaponMax(WEAPON_MAGNUM);
+		useWeaponMax(getNearestEnemy());
+	}
+}
 }
