@@ -155,15 +155,45 @@ function move(leek,distanceCible){
 		}
 	}
 }
+function getNombreEnnemiTouche(weapon,cell){
+	var result=0;
+	for (var leek in getWeaponTargets(weapon,cell)){
+		if(isEnemy(leek)){
+			result++;
+		}
+	}	
+	return result;
+}
 
-function getCellToUseGrenade(enemy){
+function getNombreAllieTouche(weapon,cell){
+	var result=0;
+	for (var leek in getWeaponTargets(weapon,cell)){
+		if(isAlly(leek)){
+			result++;
+		}
+	}	
+	return result;
+}
+
+
+
+function getCellToUseAreaWeapon(weapon,enemy){
 	var array = getCellsWhereLauncherHit(enemy);
+	var nbHittenEnemies=0;
+	var result;
 	for (var i=0;i<count(array);i++){
-		if(canUseWeaponOnCell(WEAPON_GRENADE_LAUNCHER, array[i])){
-			return array[i];
+		if(canUseWeaponOnCell(weapon, array[i])){
+			if(getNombreEnnemiTouche(weapon,array[i])>nbHittenEnemies){
+				if(getNombreAllieTouche(weapon,array[i])<=0){
+					nbHittenEnemies=getNombreEnnemiTouche(weapon,array[i]);
+					result=array[i];
+				}
+				
+			}
+	
 		}
 	}
-	return null;
+	return result;
 }
 //renvoie un tableau de cellules sur lesquelles l'ennemi 
 //est touche si on tire avec le lance grenades
@@ -206,7 +236,7 @@ function attaquer(){
 	if(canUseChip(CHIP_STALACTITE, getNearestEnemy())){
 	useChip(CHIP_STALACTITE,getNearestEnemy());
 }
-var cellCible = getCellToUseGrenade(getNearestEnemy());
+var cellCible = getCellToUseAreaWeapon(WEAPON_GRENADE_LAUNCHER,getNearestEnemy());
 if(cellCible!=null and getDistance(getCell(), getCell(getNearestEnemy()))!=1){
 	if(canUseWeaponMax(WEAPON_GRENADE_LAUNCHER,cellCible)){
 		setWeaponMax(WEAPON_GRENADE_LAUNCHER);
