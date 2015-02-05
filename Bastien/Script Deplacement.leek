@@ -1,4 +1,5 @@
 include("Functions");
+include("Script attaque");
 
 global my_leek;
 global my_cell;
@@ -14,59 +15,86 @@ global enemy_range;
 global my_weapon_move;
 
 function init_local_global_var(){
-    my_leek = getLeek();
-    my_cell = getCell();
-   
-    enemy_nearest = getNearestEnemy();
-    enemy_cell = getCell(enemy_nearest);
-   
-    path_length = getPathLength(my_cell, enemy_cell);
-    enemy_weapon = getWeapon(enemy_nearest);
-    enemy_range = getWeaponRangeMax(enemy_weapon);
-    my_weapon_move = getWeapon();
+	my_leek = getLeek();
+	my_cell = getCell();
+	
+	enemy_nearest = getNearestEnemy();
+	enemy_cell = getCell(enemy_nearest);
+	
+	path_length = getPathLength(my_cell, enemy_cell);
+	enemy_weapon = getWeapon(enemy_nearest);
+	enemy_range = getWeaponRangeMax(enemy_weapon);
+	my_weapon_move = getWeapon();
 }
 
 function move_offensif(nb_case){
-    moveToward(enemy_nearest, nb_case);
+	moveToward(enemy_nearest, nb_case);
+}
+
+function better_attaque_position(){
+	var weapons = getWeapons();
+	var chips_offensive = build_offensive_chip_array();
+	var assault;
+	var stop = getMP();
+	do{
+		assault = handle_pre_attaque(weapons, chips_offensive);
+		var is_chip=false;
+		var is_weapon=false;
+		if(!assault==null){
+			is_chip = isChip(assault);
+			is_weapon = isWeapon(assault);
+		}
+		if(assault!=null and is_chip or is_weapon){
+			move_offensif(1);
+			stop--;
+		}
+	}while(stop<=0);
 }
 
 function se_mettre_a_porte(nb_case){
-    var used_tp = 0;
-    var stop_moving = canUseWeapon(my_weapon_move, enemy_nearest);
-    if(!stop_moving){
-        while(!stop_moving){
-            moveToward(enemy_nearest, 1);
-            used_tp++;
-            stop_moving = canUseWeapon(my_weapon_move, enemy_nearest);
-            if(used_tp == nb_case){
-                stop_moving = true;
-            }
-        }
-    }
+	var used_tp = 0;
+	var stop_moving = canUseWeapon(my_weapon_move, enemy_nearest);
+	if(!stop_moving){
+		do{
+			moveToward(enemy_nearest, 1);
+			used_tp++;
+			stop_moving = canUseWeapon(my_weapon_move, enemy_nearest);
+			if(used_tp == nb_case){
+				stop_moving = true;
+			}
+		}while(!stop_moving);
+	}
 }
 
 function move_cote(nb_case){
-    moveAwayFromLine(my_cell, enemy_cell, nb_case);
+	moveAwayFromLine(my_cell, enemy_cell, nb_case);
 }
 
 function handle_move_preattaque(){
-    init_local_global_var();
-    if(!danger() && getTP() > 4){
-        se_mettre_a_porte(getMP()-1);
-    }
+	better_attaque_position();
 }
 
 function danger(){
-    if(path_length < enemy_range){
-        return true;
-    }
-    return false;
+	if(path_length < enemy_range){
+		return true;
+	}
+	return false;
 }
 
 function handle_move_postattaque(){
-    init_local_global_var();
-    if(danger()){
-        move_cote(getMP());
-    }
-    move_offensif(getMP());
+	init_local_global_var();
+	if(danger()){
+		move_cote(getMP());
+	}
+	else{
+		move_offensif(getMP());
+	}
+}
+
+function handle_move_support(){
+	init_local_global_var();
+	var nearest_ally = getNearestAlly();
+	var nearest_ally_cell = getCell(nearest_ally);
+	var distance_to_ally = getDistance(my_cell, nearest_ally_cell);
+	moveToward(nearest_ally);
 }
