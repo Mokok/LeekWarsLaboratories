@@ -25,21 +25,18 @@ function taunt(){
 
 function choose_assault(assault_list){
 	var better_assault_choice;
-	var bigger_assault_range=0;
-	var get_scope_max;
+	var bigger_assault_damage=0;
 	var sub_routine;
 	if(isWeapon(assault_list[0])){
-		get_scope_max = getWeaponMaxScope;
 		sub_routine = sub_routine_better_attaque_option;
 	}
 	if(isChip(assault_list[0])){
-		get_scope_max = getChipMaxScope;
 		sub_routine = sub_routine_better_attaque_option_chip;
 	}
-	for (var weapon in assault_list) {		
+	for (var weapon in assault_list) {
 		if(sub_routine(weapon)){
-			if(get_scope_max(weapon) > bigger_assault_range){
-				bigger_assault_range = get_scope_max(weapon);
+			if(evaluate_damage(weapon) > bigger_assault_damage){
+				bigger_assault_damage = evaluate_damage(weapon);
 				better_assault_choice = weapon;
 			}
 		}
@@ -49,18 +46,28 @@ function choose_assault(assault_list){
 
 function better_attaque_option(weapons,chips){
 	var better_weapon_choice; 
-	if(weapons[0]!=null){ better_weapon_choice = choose_assault(weapons);}
+	if(weapons[0]!=null){
+		better_weapon_choice = choose_assault(weapons);
+	}
 	var better_chip_choice;
-	if(chips[0]!=null){ better_chip_choice = choose_assault(chips);}
-	if(better_weapon_choice!=null && better_chip_choice!=null){
-		fire_weapon(better_weapon_choice);
+	if(chips[0]!=null){
+		better_chip_choice = choose_assault(chips);
 	}
-	else if(better_weapon_choice==null && better_chip_choice!=null){
-		fire_chip(better_chip_choice);
+	if(better_chip_choice!=null and better_weapon_choice!= null){
+		if(evaluate_damage(better_chip_choice) > evaluate_damage(better_weapon_choice)){	
+			return better_chip_choice;
+		}
 	}
-	else if(better_weapon_choice!=null && better_chip_choice==null){
-		fire_weapon(better_weapon_choice);
+	else{
+		return better_weapon_choice;
 	}
+}
+
+function evaluate_damage(assault_to_analyse){
+	var get_effects = getWeaponEffects;
+	if(isChip(assault_to_analyse)){get_effects = getChipEffects;}
+	var weapon_damage = get_effects(assault_to_analyse)[0][EFFECT_DAMAGE];
+	return weapon_damage * (1 + getForce() / 100);
 }
 
 function isWeaponEquiped(weapon_to_check){
@@ -101,6 +108,17 @@ function build_offensive_chip_array(){
 	}
 	return offensive_chips;
 }
+
+function handle_pre_attaque(weapons, offensive_chips){
+	return better_attaque_option(weapons,offensive_chips);
+}
+function use_assault(assault_to_use){
+	var assault_function = isChip(assault_to_use) ? useChip : useWeapon;
+	assault_function(assault_to_use, getNearestEnemy());
+}
 function handle_attaque(){
-	better_attaque_option(getWeapons(),build_offensive_chip_array());
+	var assault_to_use = better_attaque_option(getWeapons(),build_offensive_chip_array());
+	if(assault_to_use!=null){
+		use_assault(assault_to_use);
+	}
 }
