@@ -1,6 +1,7 @@
 include("Functions");
 
-function fire_weapon(){
+function fire_weapon(weapon_to_fire){
+	initWeapon(weapon_to_fire);
 	var result_assault;
 	do {
 		result_assault=useWeapon(getNearestEnemy());
@@ -22,14 +23,44 @@ function taunt(){
 	}
 }
 
-function better_attaque_option(weapon1,weapon2,weapon3,chip1,chip2,chip3){
-	
-	if(weapon1!=null){sub_routine_better_attaque_option(weapon1);}
-	if(weapon2!=null){sub_routine_better_attaque_option(weapon2);}
-	if(weapon3!=null){sub_routine_better_attaque_option(weapon3);}
-	if(chip1!=null){sub_routine_better_attaque_option_chip(chip1);}
-	if(chip2!=null){sub_routine_better_attaque_option_chip(chip2);}
-	if(chip3!=null){sub_routine_better_attaque_option_chip(chip3);}
+function choose_assault(assault_list){
+	var better_assault_choice;
+	var bigger_assault_range=0;
+	var get_scope_max;
+	var sub_routine;
+	if(isWeapon(assault_list[0])){
+		get_scope_max = getWeaponMaxScope;
+		sub_routine = sub_routine_better_attaque_option;
+	}
+	if(isChip(assault_list[0])){
+		get_scope_max = getChipMaxScope;
+		sub_routine = sub_routine_better_attaque_option_chip;
+	}
+	for (var weapon in assault_list) {		
+		if(sub_routine(weapon)){
+			if(get_scope_max(weapon) > bigger_assault_range){
+				bigger_assault_range = get_scope_max(weapon);
+				better_assault_choice = weapon;
+			}
+		}
+	}
+	return better_assault_choice;
+}
+
+function better_attaque_option(weapons,chips){
+	var better_weapon_choice; 
+	if(weapons[0]!=null){ better_weapon_choice = choose_assault(weapons);}
+	var better_chip_choice;
+	if(chips[0]!=null){ better_chip_choice = choose_assault(chips);}
+	if(better_weapon_choice!=null && better_chip_choice!=null){
+		fire_weapon(better_weapon_choice);
+	}
+	else if(better_weapon_choice==null && better_chip_choice!=null){
+		fire_chip(better_chip_choice);
+	}
+	else if(better_weapon_choice!=null && better_chip_choice==null){
+		fire_weapon(better_weapon_choice);
+	}
 }
 
 function isWeaponEquiped(weapon_to_check){
@@ -43,19 +74,33 @@ function sub_routine_better_attaque_option(weapon_to_handle){
 	if(canUseWeapon(weapon_to_handle, getNearestEnemy())
 		&& getTP()> (getWeaponCost(weapon_to_handle) 
 			+ isWeaponEquiped(weapon_to_handle))){
-		initWeapon(weapon_to_handle);
-		taunt();
-		fire_weapon();
+		return true;
 	}
+	return false;
 }
 
 function sub_routine_better_attaque_option_chip(chip_to_handle){
-	if(canUseChip(chip_to_handle, getNearestEnemy())&& getTP()>getChipCost(chip_to_handle)){
-		taunt();
-		fire_chip(chip_to_handle);
+	if(canUseChip(chip_to_handle, getNearestEnemy())
+		&& getTP()>getChipCost(chip_to_handle)){
+		return true;
 	}
+	return false;
 }
-
-function handle_attaque(weapon1,weapon2,weapon3,chip1,chip2,chip3){
-	better_attaque_option(weapon1,weapon2,weapon3,chip1,chip2,chip3);
+function build_offensive_chip_array(){
+	var chips = getChips();
+	var offensive_chips = [];
+	var nb_offensive_chips = 0;
+	for(var chip in chips){
+		var chip_effects = getChipEffects(chip);
+		for(var effect in chip_effects){
+			if(effect[0]==EFFECT_DAMAGE){
+				offensive_chips[nb_offensive_chips] = chip;
+				nb_offensive_chips++;
+			}
+		}
+	}
+	return offensive_chips;
+}
+function handle_attaque(){
+	better_attaque_option(getWeapons(),build_offensive_chip_array());
 }
