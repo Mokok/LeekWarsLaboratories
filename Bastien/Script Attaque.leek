@@ -1,61 +1,70 @@
 include("Functions");
 
-function fire_weapon(){
-	var result_assault;
-	do {
-		result_assault=useWeapon(getNearestEnemy());
-	}while (result_assault == USE_SUCCESS);
+global enemy_to_assault;
+global my_tp;
+global my_weapon;
+global current_assault_chip;
+
+function init_local_global_var_weapon(){
+    enemy_to_assault = getNearestEnemy();
+    my_weapon = getWeapon();
+    if(my_weapon==null){
+        my_weapon = initWeapon(WEAPON_MAGNUM);
+    }
+    my_tp = getTP();
+    current_assault_chip = CHIP_SPARK;
 }
 
-function fire_chip(chip_to_fire){
-	var result;
-	do {
-		result=useChip(chip_to_fire, getNearestEnemy());
-	}while (result == USE_SUCCESS);
+function fire_weapon(){
+    var result_assault=USE_SUCCESS;
+    while (result_assault == USE_SUCCESS){
+        result_assault=useWeapon(enemy_to_assault);
+    }
+}
+
+function fire_chip(){
+    var result = USE_SUCCESS;
+    while (result == USE_SUCCESS) {
+        result=useChip(current_assault_chip, enemy_to_assault);
+    }
 }
 
 function taunt(){
-	if(getLife(getNearestEnemy()) < 40 && getLife() > 40){
-		say("Tu ne le sais pas encore mais tu vas finir dans le grand pot au feu !");
-		say("ATATATTATATATATTATATATATATATATATTATA");
-		say("ATOUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
-	}
+    if(getLife(enemy_to_assault) < 40 && getLife() > 40){
+        say("Tu ne le sais pas encore mais tu vas finir dans le grand pot au feu !");
+        say("ATATATTATATATATTATATATATATATATATTATA");
+        say("ATOUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+    }
 }
 
-function better_attaque_option(weapon1,weapon2,weapon3,chip1,chip2,chip3){
-	
-	if(weapon1!=null){sub_routine_better_attaque_option(weapon1);}
-	if(weapon2!=null){sub_routine_better_attaque_option(weapon2);}
-	if(weapon3!=null){sub_routine_better_attaque_option(weapon3);}
-	if(chip1!=null){sub_routine_better_attaque_option_chip(chip1);}
-	if(chip2!=null){sub_routine_better_attaque_option_chip(chip2);}
-	if(chip3!=null){sub_routine_better_attaque_option_chip(chip3);}
+function better_attaque_option(){
+    taunt();
+    if(canUseWeapon(WEAPON_LASER, enemy_to_assault)){
+        initWeapon(WEAPON_LASER);
+    }
+    else if(canUseWeapon(WEAPON_MAGNUM, enemy_to_assault)){
+        initWeapon(WEAPON_MAGNUM);
+    }
+   
+    var can_weapon = canUseWeapon(enemy_to_assault);
+    var can_chip = canUseChip(current_assault_chip, enemy_to_assault);
+   
+    if(can_weapon){
+        if(can_chip){
+            fire_weapon();
+        }
+    }
+    else if(can_chip){
+        if(!can_weapon){
+            fire_chip();
+        }
+    }
+    else if(can_weapon){
+        fire_weapon();
+    }
 }
 
-function isWeaponEquiped(weapon_to_check){
-	if(getWeapon()==weapon_to_check)
-		return 0;
-	else
-		return 1;
-}
-
-function sub_routine_better_attaque_option(weapon_to_handle){
-	if(canUseWeapon(weapon_to_handle, getNearestEnemy())
-		&& getTP()> (getWeaponCost(weapon_to_handle) 
-			+ isWeaponEquiped(weapon_to_handle))){
-		initWeapon(weapon_to_handle);
-		taunt();
-		fire_weapon();
-	}
-}
-
-function sub_routine_better_attaque_option_chip(chip_to_handle){
-	if(canUseChip(chip_to_handle, getNearestEnemy())&& getTP()>getChipCost(chip_to_handle)){
-		taunt();
-		fire_chip(chip_to_handle);
-	}
-}
-
-function handle_attaque(weapon1,weapon2,weapon3,chip1,chip2,chip3){
-	better_attaque_option(weapon1,weapon2,weapon3,chip1,chip2,chip3);
+function handle_attaque(){
+    init_local_global_var_weapon();
+    better_attaque_option();
 }
