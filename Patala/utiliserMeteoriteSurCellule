@@ -1,0 +1,56 @@
+// Deux fonctions pour utiliser météorite sur les cellules autour de l'ennemi
+// retourne true ou false suivant si la chip est utilisé ou non
+// **Dans mon cas j'utilise l'arme destroyer si je peux avant car taper sur une cellule a cote de l'ennemi
+// **la rend moins forte
+// La deuxieme fonction est calculé sur les cellules autour en dur ( avec les nombres )
+
+function utiliserMeteoriteCellule(celluleEnnemi,liberation,enemy) {
+	var celluleMoi = getCell();
+	var tableauCellule = getCellsToUseChipOnCell(CHIP_METEORITE, celluleEnnemi);
+	for (var i = 0; i < count(tableauCellule); i++) {
+		var distance = getCellDistance(getCell(), tableauCellule[i]);
+		if(distance <= getMP()) {
+			moveTowardCell(tableauCellule[i]);
+			if(liberation) {
+				useChip(CHIP_LIBERATION, enemy);
+			}
+			if (canUseWeapon(enemy)) {
+				utiliserWeapon(enemy);
+			}
+			useChipOnCell(CHIP_METEORITE, celluleEnnemi);
+			return true;
+		}
+	}
+	return false;
+}
+
+
+function utiliserMeteoriteAutour(enemy,liberation) {
+	var celluleEnnemi = getCell(enemy);
+
+	if(!utiliserMeteoriteCellule(celluleEnnemi-17,liberation,enemy)) {
+		if(!utiliserMeteoriteCellule(celluleEnnemi-18,liberation,enemy)) {
+			if(!utiliserMeteoriteCellule(celluleEnnemi+17,liberation,enemy)) {
+				if(!utiliserMeteoriteCellule(celluleEnnemi+18,liberation,enemy)) {
+					if(!utiliserMeteoriteCellule(celluleEnnemi-1,liberation,enemy)) {
+						if(!utiliserMeteoriteCellule(celluleEnnemi+1,liberation,enemy)) {
+							if(!utiliserMeteoriteCellule(celluleEnnemi+35,liberation,enemy)) {
+								if(!utiliserMeteoriteCellule(celluleEnnemi-35,liberation,enemy)) {
+									if(!utiliserMeteoriteCellule(celluleEnnemi-36,liberation,enemy)) {
+										if(!utiliserMeteoriteCellule(celluleEnnemi+36,liberation,enemy)) {
+											if(!utiliserMeteoriteCellule(celluleEnnemi-34,liberation,enemy)) {
+												if(!utiliserMeteoriteCellule(celluleEnnemi+34,liberation,enemy)) {
+													return false;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
