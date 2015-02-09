@@ -3,6 +3,7 @@
 // **Dans mon cas j'utilise l'arme destroyer si je peux avant car taper sur une cellule a cote de l'ennemi
 // **la rend moins forte
 // La deuxieme fonction est calculé sur les cellules autour en dur ( avec les nombres )
+// pour lightning et iceberg ce sont les mêmes fonctions
 
 function utiliserMeteoriteCellule(celluleEnnemi,liberation,enemy) {
 	var celluleMoi = getCell();
