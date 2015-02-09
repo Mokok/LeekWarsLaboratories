@@ -1,0 +1,94 @@
+// renvoi la cellule où se positionner pour utiliser la chip Iceberg sur l'ennemi(sa cellule)
+// renvoi 0 si on ne peut pas
+
+
+function avancerEnnemiChipIceberg(celluleEnnemi) {
+	var celluleMoi = getCell();
+	var celluleApproprie = 0;
+
+		if(getCellDistance(celluleEnnemi-54, celluleMoi) <= getMP()) {
+			celluleApproprie = celluleEnnemi-54;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-36)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-18)) celluleApproprie=0;
+		}
+		if(getCellDistance(celluleEnnemi-72, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi-72;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-54)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-36)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-18)) celluleApproprie=0;
+		}
+		if(getCellDistance(celluleEnnemi-90, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi-90;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-72)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-54)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-36)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-18)) celluleApproprie=0;
+		}
+		if(getCellDistance(celluleEnnemi-51, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi-51;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-34)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-17)) celluleApproprie=0;
+		}
+		if(getCellDistance(celluleEnnemi-68, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi-68;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-51)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-34)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-17)) celluleApproprie=0;
+		}
+		if(getCellDistance(celluleEnnemi-85, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi-85;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-68)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-51)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-34)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi-17)) celluleApproprie=0;
+		}	
+		if(getCellDistance(celluleEnnemi+54, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi+54;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+36)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+18)) celluleApproprie=0;
+		}
+		if(getCellDistance(celluleEnnemi+72, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi+72;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+54)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+36)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+18)) celluleApproprie=0;
+		}
+		if(getCellDistance(celluleEnnemi+90, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi+90;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+72)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+54)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+36)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+18)) celluleApproprie=0;
+		}
+		if(getCellDistance(celluleEnnemi+51, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi+51;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+34)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+17)) celluleApproprie=0;
+		}
+		if(getCellDistance(celluleEnnemi+68, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi+68;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+51)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+34)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+17)) celluleApproprie=0;
+		}
+		if(getCellDistance(celluleEnnemi+85, celluleMoi) <= getMP() && !celluleApproprie) {
+			celluleApproprie = celluleEnnemi+85;
+			if(isObstacle(celluleApproprie)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+68)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+51)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+34)) celluleApproprie=0;
+			if(isObstacle(celluleEnnemi+17)) celluleApproprie=0;
+		}	
+	return celluleApproprie;
+}
