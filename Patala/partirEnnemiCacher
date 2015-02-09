@@ -1,0 +1,112 @@
+// La fonction se cache de l'ennemi derriere un obstacle
+// Elle n'est pas encore au point faut que je l'améliore
+
+function partirCacherEnnemi(enemy) {
+	var mp = getMP();
+	var celluleMoi = getCell();
+	var obstaclesMap = getObstacles();
+	var tableauCelluleAutourMoi = [];
+	var indice = 0;
+	
+	for (var i = 0; i < getMP() ; i++) { 
+		if(i == 2) {
+			var cellule2 = getCell()+1;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()-1;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()+35;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()-35;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()+19;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()-19;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()+16;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()-16;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()+52;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()-52;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()+53;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			cellule2 = getCell()-53;
+			if(isObstacle(cellule2)) {
+				tableauCelluleAutourMoi[indice] = cellule2;indice++;
+			}
+			
+		}
+		var cellule = getCell()+18*i;
+		if(isObstacle(cellule)) {
+			tableauCelluleAutourMoi[indice] = cellule;indice++;
+		}
+		cellule = getCell()-18*i;
+		if(isObstacle(cellule)) {
+			tableauCelluleAutourMoi[indice] = cellule;indice++;
+		}
+		cellule = getCell()+17*i;
+		if(isObstacle(cellule)) {
+			tableauCelluleAutourMoi[indice] = cellule;indice++;
+		}
+		cellule = getCell()-17*i;
+		if(isObstacle(cellule)) {
+			tableauCelluleAutourMoi[indice] = cellule;indice++;
+		}
+	}
+	
+	for (var i = 0; i < count(tableauCelluleAutourMoi); i++) {
+		debug("Cellule autour obstacle"+tableauCelluleAutourMoi[i]);
+	}
+	var meilleureCellule=0;
+	for (var i = 0; i <= count(tableauCelluleAutourMoi) ; i++) {
+		var positionEnnemi = getCell() - getCell(enemy);
+		if(positionEnnemi > 0) {
+			if(tableauCelluleAutourMoi[i] > celluleMoi ) {
+				if(!isObstacle(tableauCelluleAutourMoi[i]+18) ) {
+					if(getCellDistance(getCell(),tableauCelluleAutourMoi[i]+18) <= getMP()) {
+						meilleureCellule = tableauCelluleAutourMoi[i]+18;
+					}
+				}
+			}
+		} else {
+			if(tableauCelluleAutourMoi[i] < celluleMoi ) {
+				if(!isObstacle(tableauCelluleAutourMoi[i]-18) ) {
+					if(getCellDistance(getCell(),tableauCelluleAutourMoi[i]-18) <= getMP()) {
+						meilleureCellule = tableauCelluleAutourMoi[i]-18;
+					}
+				}
+			}
+		}
+	}
+	
+	debug("Meilleure cellule :"+meilleureCellule);
+	if(meilleureCellule != 0) {
+		moveTowardCell(meilleureCellule);
+	} else {
+		moveAwayFrom(enemy);
+	}
+}
