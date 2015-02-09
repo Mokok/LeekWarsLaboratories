@@ -1,0 +1,117 @@
+// renvoi la cellule approprié pour utiliser iceberg sur une case autour de l'ennemi (zone d'impact)
+// et la cellule impact o sera utilisé la chip
+// renvoie 0 si ce n'est pas possible
+
+function meilleureCelluleImpactIceberg(enemy,numero) {
+var celluleApproprie=0;
+var celluleImpact=0;
+var celluleEnnemi = getCell(enemy);
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi-18);
+		celluleImpact = celluleEnnemi-18;
+		if(isObstacle(celluleEnnemi-18)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi-17);
+		celluleImpact = celluleEnnemi-17;
+		if(isObstacle(celluleEnnemi-17)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}	
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi+18);
+		celluleImpact = celluleEnnemi+18;
+		if(isObstacle(celluleEnnemi+18)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi+17);
+		celluleImpact = celluleEnnemi+17;
+		if(isObstacle(celluleEnnemi+17)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi-1);
+		celluleImpact = celluleEnnemi-1;
+		if(isObstacle(celluleEnnemi-1)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi+35);
+		celluleImpact = celluleEnnemi+35;
+		if(isObstacle(celluleEnnemi+35)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi+1);
+		celluleImpact = celluleEnnemi+1;
+		if(isObstacle(celluleEnnemi+1)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi-35);
+		celluleImpact = celluleEnnemi-35;
+		if(isObstacle(celluleEnnemi-35)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi-36);
+		celluleImpact = celluleEnnemi-36;
+		if(isObstacle(celluleEnnemi-36)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi-34);
+		celluleImpact = celluleEnnemi-34;
+		if(isObstacle(celluleEnnemi-34)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi+34);
+		celluleImpact = celluleEnnemi+34;
+		if(isObstacle(celluleEnnemi+34)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+	if(!celluleApproprie) {
+		celluleApproprie = avancerEnnemiChipIceberg(celluleEnnemi+36);
+		celluleImpact = celluleEnnemi+36;
+		if(isObstacle(celluleEnnemi+36)) {
+			celluleApproprie=0;
+			celluleImpact=0;
+		}
+	}
+
+	debug("Cellule Moi :"+getCell());
+	debug("Cellule ennemi :"+celluleEnnemi);
+	debug("Tableau approprié :"+celluleApproprie);
+	debug("Tableau impact :"+celluleImpact);
+	
+	if(numero == 1) {
+		return celluleApproprie;
+	} else {
+		return celluleImpact;
+	}
+	
+}
