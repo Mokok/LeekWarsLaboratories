@@ -1,0 +1,31 @@
+// prend comme paramètre l'id de l'ennemi, sa cellule et libération qui est un boolean pour savoir si on doit l'utiliser 
+// ou pas suivant s'il y a plus de 100 de bouclier absolu ou plus de 40 de bouclier relatif
+// Utilise météorite sur l'ennemi et libération au préalable
+// retourne true si la chip est utilisé, false sinon
+
+
+function utiliserMeteorite(enemy,celluleEnnemi,liberation) {
+	var celluleMoi = getCell();
+	var tableauCellule = getCellsToUseChip(CHIP_METEORITE, enemy);
+	for (var i = 0; i <= count(tableauCellule); i++) {
+		if(tableauCellule[i] == celluleMoi) {
+			if(liberation) {
+				useChip(CHIP_LIBERATION, enemy);
+			}
+			useChip(CHIP_METEORITE, enemy);
+			return true;
+		}	
+	}
+	for (var i = 0; i < count(tableauCellule); i++) {
+		var distance = getCellDistance(getCell(), tableauCellule[i]);
+		if(distance <= getMP()) {
+			moveTowardCell(tableauCellule[i]);
+			if(liberation) {
+				useChip(CHIP_LIBERATION, enemy);
+			}
+			useChip(CHIP_METEORITE, enemy);
+			return true;
+		}
+	}
+	return false;
+}
