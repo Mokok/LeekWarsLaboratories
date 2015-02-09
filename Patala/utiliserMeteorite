@@ -2,6 +2,7 @@
 // ou pas suivant s'il y a plus de 100 de bouclier absolu ou plus de 40 de bouclier relatif
 // Utilise météorite sur l'ennemi et libération au préalable
 // retourne true si la chip est utilisé, false sinon
+// pour lightening et iceberg ce sont les mêmes fonctions
 
 
 function utiliserMeteorite(enemy,celluleEnnemi,liberation) {
