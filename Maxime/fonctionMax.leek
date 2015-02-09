@@ -33,6 +33,16 @@ function useWeaponOnCellMax(cell){
 	
 }
 
+function useChipOnCellMax(chip,cell){
+	//On utilise tous nos tp sur l'ennemi le plus faible
+	var TP=getTP();
+	var cost=getChipCost(chip);
+	for (var i=0;i<TP/cost;i++){
+		useChipOnCell(chip, cell);
+	}
+	
+}
+
 /**
 * Utilise une chip jusqu'à epuisement des PT
 **/
@@ -157,7 +167,14 @@ function move(leek,distanceCible){
 }
 function getNombreEnnemiTouche(weapon,cell){
 	var result=0;
-	for (var leek in getWeaponTargets(weapon,cell)){
+	var array;
+	if(isChip(weapon)){
+		array=getChipTargets(weapon, cell);
+	}
+	else{
+		array=getWeaponTargets(weapon, cell);
+	}
+	for (var leek in array){
 		if(isEnemy(leek)){
 			result++;
 		}
@@ -167,7 +184,14 @@ function getNombreEnnemiTouche(weapon,cell){
 
 function getNombreAllieTouche(weapon,cell){
 	var result=0;
-	for (var leek in getWeaponTargets(weapon,cell)){
+	var array;
+		if(isChip(weapon)){
+		array=getChipTargets(weapon, cell);
+	}
+	else{
+		array=getWeaponTargets(weapon, cell);
+	}
+	for (var leek in array){
 		if(isAlly(leek)){
 			result++;
 		}
@@ -178,26 +202,36 @@ function getNombreAllieTouche(weapon,cell){
 
 
 function getCellToUseAreaWeapon(weapon,enemy){
-	var array = getCellsWhereLauncherHit(enemy);
+	var array = getCellsWhereWeaponHit(weapon,enemy);
 	var nbHittenEnemies=0;
 	var result;
 	for (var i=0;i<count(array);i++){
-		if(canUseWeaponOnCell(weapon, array[i])){
-			if(getNombreEnnemiTouche(weapon,array[i])>nbHittenEnemies){
-				if(getNombreAllieTouche(weapon,array[i])<=0){
-					nbHittenEnemies=getNombreEnnemiTouche(weapon,array[i]);
-					result=array[i];
-				}
-				
+		if(isChip(weapon)){
+			if(canUseChipOnCell(weapon, array[i])){
+					if(getNombreEnnemiTouche(weapon,array[i])>nbHittenEnemies){
+						if(getNombreAllieTouche(weapon,array[i])<=0){
+							nbHittenEnemies=getNombreEnnemiTouche(weapon,array[i]);
+							result=array[i];
+						}
+					}
 			}
-	
+		}
+		else{
+			if(canUseWeaponOnCell(weapon, array[i])){
+				if(getNombreEnnemiTouche(weapon,array[i])>nbHittenEnemies){
+					if(getNombreAllieTouche(weapon,array[i])<=0){
+						nbHittenEnemies=getNombreEnnemiTouche(weapon,array[i]);
+						result=array[i];
+					}
+				}
+			}
 		}
 	}
 	return result;
 }
 //renvoie un tableau de cellules sur lesquelles l'ennemi 
 //est touche si on tire avec le lance grenades
-function getCellsWhereLauncherHit(enemy){
+/*function getCellsWhereLauncherHit(enemy){
 		var cellCible = getCell(enemy);
 		var x=getCellX(cellCible);
 		var y=getCellY(cellCible);
@@ -217,6 +251,41 @@ function getCellsWhereLauncherHit(enemy){
 		result[12]=getCellFromXY(x, y-2);
 		return result;	
 }
+*/
+//renvoie un tableau de cellules sur lesquelles l'ennemi 
+//est touche si on tire avec weapon
+function getCellsWhereWeaponHit(weapon,enemy){
+		var cellCible = getCell(enemy);
+		var area;
+		if(isChip(weapon)){
+			area=getChipArea(weapon);
+		}
+		else{
+			area=getWeaponArea(weapon);
+		}
+		var x=getCellX(cellCible);
+		var y=getCellY(cellCible);
+		var result=[];
+		result[0]=cellCible;
+		if(area==AREA_CIRCLE_1 or area==AREA_CIRCLE_2){
+			result[1]=getCellFromXY(x-1, y);
+			result[2]=getCellFromXY(x+1, y);
+			result[3]=getCellFromXY(x, y-1);
+			result[4]=getCellFromXY(x, y+1);
+		}
+		if(area==AREA_CIRCLE_2){
+			result[5]=getCellFromXY(x-1, y-1);
+			result[6]=getCellFromXY(x-1, y+1);
+			result[7]=getCellFromXY(x+1, y-1);
+			result[8]=getCellFromXY(x+1, y+1);
+			result[9]=getCellFromXY(x+2, y);
+			result[10]=getCellFromXY(x-2, y);
+			result[11]=getCellFromXY(x, y+2);
+			result[12]=getCellFromXY(x, y-2);
+		}
+
+		return result;	
+}
 //Retourne true si l'on peut utiliser l'arme meme apres en avoir change
 function canUseWeaponMax(weapon,cell){
 	if(getWeapon()!=weapon){
@@ -234,19 +303,65 @@ function canUseWeaponMax(weapon,cell){
 
 function attaquer(){
 	if(canUseChip(CHIP_STALACTITE, getNearestEnemy())){
-	useChip(CHIP_STALACTITE,getNearestEnemy());
-}
-var cellCible = getCellToUseAreaWeapon(WEAPON_GRENADE_LAUNCHER,getNearestEnemy());
-if(cellCible!=null and getDistance(getCell(), getCell(getNearestEnemy()))!=1){
-	if(canUseWeaponMax(WEAPON_GRENADE_LAUNCHER,cellCible)){
-		setWeaponMax(WEAPON_GRENADE_LAUNCHER);
-		useWeaponOnCellMax(cellCible);
+		useChip(CHIP_STALACTITE,getNearestEnemy());
+	}
+	var cellCible = getCellToUseAreaWeapon(WEAPON_GRENADE_LAUNCHER,getNearestEnemy());
+	if(cellCible!=null and getDistance(getCell(), getCell(getNearestEnemy()))!=1){
+		if(canUseWeaponMax(WEAPON_GRENADE_LAUNCHER,cellCible)){
+			setWeaponMax(WEAPON_GRENADE_LAUNCHER);
+			useWeaponOnCellMax(cellCible);
+		}
+	}
+	else{
+		if(canUseWeapon(WEAPON_MAGNUM, getNearestEnemy())){
+			setWeaponMax(WEAPON_MAGNUM);
+			useWeaponMax(getNearestEnemy());
+		}
 	}
 }
-else{
-	if(canUseWeapon(WEAPON_MAGNUM, getNearestEnemy())){
-		setWeaponMax(WEAPON_MAGNUM);
-		useWeaponMax(getNearestEnemy());
-	}
+//Renvoie les degats causes par weapon si shooter vise target
+function getDamageWeapon(weapon,shooter,target){
+	var bouclierA=getAbsoluteShield(target);
+	var bouclierR=getRelativeShield(target);
+	var damage=getWeaponEffects(weapon)[0][1]* (1+getForce(shooter)/100);
+	var result=round(damage*(1-bouclierR/100)-bouclierA);
+	return result;
 }
+//Renvoie les degats causes par chip si shooter vise target
+function getDamageChip(chip,shooter,target){
+	var bouclierA=getAbsoluteShield(target);
+	var bouclierR=getRelativeShield(target);
+	var damage=getChipEffects(chip)[0][1]* (1+getForce(shooter)/100);
+	var result=round(damage*(1-bouclierR/100)-bouclierA);
+	return result;
+}
+//Renvoie la chip qui fait le plus de degats du poireau leek
+function getChipOffensive(leek){
+	var allChips=getChips(leek);
+	var maxDamage=0;
+	var chipResult;
+	for(var aChip in allChips){
+		var effect=getChipEffects(aChip)[0];
+		if(effect[0]==EFFECT_DAMAGE){
+			if(effect[1]>maxDamage){
+				maxDamage=effect[1];
+				chipResult=aChip;
+			}
+		}
+	}
+	return chipResult;
+}
+
+function getPossibleTakenDamage(shooter,target){
+	var chipOffensive=getChipOffensive(shooter);
+	var weaponShooter=getWeapon(shooter);
+	var damageTakenChip=0;
+	var damageTakenWeapon=0;
+	if(chipOffensive!=null){
+		damageTakenChip=getDamageChip(chipOffensive,shooter,target);	
+	}
+	if(weaponShooter!=null){
+		damageTakenWeapon=getDamageWeapon(getWeapon(shooter),shooter,target);
+	}
+	return max(damageTakenWeapon, damageTakenChip);
 }
